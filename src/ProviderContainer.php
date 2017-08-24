@@ -101,6 +101,14 @@ class ProviderContainer extends Container
     /**
      * @inheritdoc
      */
+    public function addValue(string $id, $entry): Entry
+    {
+        return $this->container->addValue($id, $entry);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function addServiceProvider(ServiceProviderInterface $serviceProvider): Provider
     {
         return $this->container->addServiceProvider($serviceProvider);

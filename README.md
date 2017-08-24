@@ -58,6 +58,9 @@ $date = $container->get(DateTime::class);
 // add entries to the container to have interfaces resolved
 $container->add(SomeInterface::class, function () { return new Some(); });
 
+// add a raw value to the container, these are always treated as shared objects.
+$container->addValue('config', new Config());
+
 // now auto resolve the class that requires the SomeInterface entry
 $container->get(SomeUser::class);
 ```
@@ -71,6 +74,7 @@ Use the `ManageContainerTrait` to automatically have the container set on a clas
 - `Entry add(string $id, callable $entry, string $type = Container::EXCLUSIVE)`
 - `Entry addShared(string $id, callable $entry)`
 - `Entry addExclusive(string $id, callable $entry)`
+- `Entry addValue(string $id, $entry)`
 - `Provider addServiceProvider(Contract\ServiceProvider $serviceProvider)`
 - `Container addAlias(string $id, string $alias)`
 - `mixed get(string $id)`

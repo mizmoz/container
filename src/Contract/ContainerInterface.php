@@ -55,6 +55,15 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
     public function addShared(string $id, $entry): Entry;
 
     /**
+     * Add a share resolved value. This should only be used for things like app wide config etc.
+     *
+     * @param string $id
+     * @param mixed $value
+     * @return Entry
+     */
+    public function addValue(string $id, $value): Entry;
+
+    /**
      * Add a service provider to the container
      *
      * @param ServiceProviderInterface $serviceProvider

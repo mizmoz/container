@@ -177,6 +177,13 @@ class ContainerTest extends TestCase
         $container->addAlias('helloMethod', 'sayIt');
         $this->assertEquals('hello', $container->get('sayIt'));
     }
+    
+    public function testAddValue()
+    {
+        $container = new Container();
+        $container->addValue('name', 'bob');
+        $this->assertEquals('bob', $container->get('name'));
+    }
 
     public function testManageContainerTrait()
     {

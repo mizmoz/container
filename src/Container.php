@@ -133,6 +133,16 @@ class Container implements ContainerInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function addValue(string $id, $value): Entry
+    {
+        return $this->addShared($id, function () use ($value) {
+            return $value;
+        });
+    }
+
+    /**
      * @inheritdoc
      */
     public function addServiceProvider(ServiceProviderInterface $serviceProvider): Provider
