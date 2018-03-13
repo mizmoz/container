@@ -1,4 +1,7 @@
 
+v1.3.0
+
+- Add afterSetAppContainer() to the ManageContainerInterface which must be called after the setAppContainer method is called
 
 v1.2.0
 

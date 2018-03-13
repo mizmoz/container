@@ -28,6 +28,30 @@ class InjectContainerTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $simple->getAppContainer());
     }
 
+    public function testInjectionAfterSetAppContainerIsCalled()
+    {
+        $simple = new class ()
+        {
+            use ManageContainerTrait;
+
+            public $called = false;
+
+            /**
+             * @inheritDoc
+             */
+            public function afterSetAppContainer()
+            {
+                $this->called = true;
+            }
+        };
+
+        // inject the container
+        $simple = InjectContainer::inject($this->getContainer(), $simple);
+
+        // make sure we called the method
+        $this->assertTrue($simple->called);
+    }
+
     /**
      * Check that we can resolve the container when it's included in some other part of the class (child trait etc).
      */

@@ -7,6 +7,12 @@ use Psr\Container\ContainerInterface;
 interface ManageContainerInterface
 {
     /**
+     * Called after the app container has been set
+     *
+     */
+    public function afterSetAppContainer();
+
+    /**
      * Get the container
      *
      * @return ContainerInterface
@@ -14,7 +20,7 @@ interface ManageContainerInterface
     public function getAppContainer(): ContainerInterface;
 
     /**
-     * Set the container
+     * Set the container, must call afterSetAppContainer() after setting the container
      *
      * @param ContainerInterface $container
      * @return $this

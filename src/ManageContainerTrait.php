@@ -13,6 +13,11 @@ trait ManageContainerTrait
     private $appContainer;
 
     /**
+     * Called after setting the app container
+     */
+    public function afterSetAppContainer() {}
+
+    /**
      * Get the container
      *
      * @return ContainerInterface
@@ -35,6 +40,7 @@ trait ManageContainerTrait
     public function setAppContainer(ContainerInterface $container)
     {
         $this->appContainer = $container;
+        $this->afterSetAppContainer();
         return $this;
     }
 
