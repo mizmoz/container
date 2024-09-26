@@ -3,7 +3,7 @@
 ## Aims
 
 - Be lightweight, lazy load all the things.
-- Use PHP-FIG PSR-11
+- Use PHP-FIG PSR-11 v2 interface
 - Auto resolve when possible
 
 ## Getting Started
