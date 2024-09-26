@@ -9,19 +9,19 @@ use Mizmoz\Container\Resolver;
 
 class ResolverTest extends TestCase
 {
-    public function testResolveByConcreteClassWithoutConstructor()
+    public function testResolveByConcreteClassWithoutConstructor(): void
     {
         $container = new Container(new Resolver());
         $this->assertInstanceOf(ResolveNoConstructor::class, $container->get(ResolveNoConstructor::class));
     }
 
-    public function testResolveByConcreteClass()
+    public function testResolveByConcreteClass(): void
     {
         $container = new Container(new Resolver());
         $this->assertInstanceOf(ResolveLogger::class, $container->get(ResolveLogger::class));
     }
 
-    public function testResolveByConcreteClassWithDefaultArgs()
+    public function testResolveByConcreteClassWithDefaultArgs(): void
     {
         $container = new Container(new Resolver());
         $resolved = $container->get(ResolveBaseDefaultArgs::class);
@@ -29,7 +29,7 @@ class ResolverTest extends TestCase
         $this->assertEquals('Bob', $resolved->name);
     }
 
-    public function testResolveByConcreteClassWithConstructorClass()
+    public function testResolveByConcreteClassWithConstructorClass(): void
     {
         $container = new Container(new Resolver());
         $resolveBase = $container->get(ResolveBase::class);
@@ -37,7 +37,7 @@ class ResolverTest extends TestCase
         $this->assertInstanceOf(ResolveLogger::class, $resolveBase->logger);
     }
 
-    public function testResolveByInterfaceClassWithConstructorClass()
+    public function testResolveByInterfaceClassWithConstructorClass(): void
     {
         $container = new Container(new Resolver());
         $container->add(ResolveLoggerInterface::class, function () {
@@ -49,13 +49,13 @@ class ResolverTest extends TestCase
         $this->assertInstanceOf(ResolveLogger::class, $resolveBase->logger);
     }
 
-    public function testResolveByInterfaceClassWithConstructorClassFail()
+    public function testResolveByInterfaceClassWithConstructorClassFail(): void
     {
         $this->expectException(ResolutionFailedException::class);
         (new Container(new Resolver()))->get(ResolveBaseInterface::class);
     }
 
-    public function testResolveAddedClass()
+    public function testResolveAddedClass(): void
     {
         $container = new Container(new Resolver());
         $container->add('log', ResolveBase::class);
@@ -63,7 +63,7 @@ class ResolverTest extends TestCase
         $this->assertInstanceOf(ResolveLogger::class, $container->get('log')->logger);
     }
 
-    public function testResolveIsCalledForEachGet()
+    public function testResolveIsCalledForEachGet(): void
     {
         $resolver = Mockery::mock(Resolver::class);
         $resolver->shouldReceive('resolve')

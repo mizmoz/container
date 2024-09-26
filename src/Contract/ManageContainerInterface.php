@@ -10,7 +10,7 @@ interface ManageContainerInterface
      * Called after the app container has been set
      *
      */
-    public function afterSetAppContainer();
+    public function afterSetAppContainer(): void;
 
     /**
      * Get the container
@@ -25,5 +25,5 @@ interface ManageContainerInterface
      * @param ContainerInterface $container
      * @return $this
      */
-    public function setAppContainer(ContainerInterface $container);
+    public function setAppContainer(ContainerInterface $container): static;
 }

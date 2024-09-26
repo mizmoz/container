@@ -10,7 +10,7 @@ abstract class ServiceProviderAbstract implements ServiceProviderInterface
     /**
      * @inheritdoc
      */
-    public function boot(ContainerInterface $container)
+    public function boot(ContainerInterface $container): void
     {
     }
 }

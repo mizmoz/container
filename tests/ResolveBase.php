@@ -4,7 +4,7 @@ namespace Mizmoz\Container\Tests;
 
 class ResolveBase
 {
-    public $logger;
+    public ResolveLogger $logger;
 
     public function __construct(ResolveLogger $resolveLogger)
     {

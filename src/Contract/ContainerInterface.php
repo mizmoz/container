@@ -10,12 +10,12 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
     /**
      * Exclusive items will be created each time get($id) is called
      */
-    const EXCLUSIVE = 'exclusive';
+    const string EXCLUSIVE = 'exclusive';
 
     /**
      * Shared items will always return the same object when get($id) is called
      */
-    const SHARED = 'shared';
+    const string SHARED = 'shared';
 
     /**
      * Add an item to the container
@@ -25,7 +25,7 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
      * @param string $type
      * @return Entry
      */
-    public function add(string $id, $entry, string $type = self::EXCLUSIVE): Entry;
+    public function add(string $id, callable|string $entry, string $type = self::EXCLUSIVE): Entry;
 
     /**
      * Add an alias for an entry
@@ -43,7 +43,7 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
      * @param callable|string $entry
      * @return Entry
      */
-    public function addExclusive(string $id, $entry): Entry;
+    public function addExclusive(string $id, callable|string $entry): Entry;
 
     /**
      * Helper to add a shared entry to the container
@@ -52,7 +52,7 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
      * @param callable|string $entry
      * @return Entry
      */
-    public function addShared(string $id, $entry): Entry;
+    public function addShared(string $id, callable|string $entry): Entry;
 
     /**
      * Add a share resolved value. This should only be used for things like app wide config etc.
@@ -61,7 +61,7 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
      * @param mixed $value
      * @return Entry
      */
-    public function addValue(string $id, $value): Entry;
+    public function addValue(string $id, mixed $value): Entry;
 
     /**
      * Add a service provider to the container
@@ -74,8 +74,15 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
     /**
      * Inject the container if it uses the ManageContainerTrait
      *
-     * @param $entry
+     * @param mixed $entry
      * @return mixed
      */
-    public function injectContainer($entry);
+    public function injectContainer(mixed $entry): mixed;
+
+    /**
+     * Get a list of the items this container provides
+     *
+     * @return string[]
+     */
+    public function provides(): array;
 }

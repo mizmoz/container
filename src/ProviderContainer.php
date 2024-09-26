@@ -11,19 +11,19 @@ class ProviderContainer extends Container
     /**
      * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
 
     /**
      * @var ServiceProviderInterface
      */
-    private $serviceProvider;
+    private ServiceProviderInterface $serviceProvider;
 
     /**
      * Keep a list of the registered items.
      *
-     * @var array
+     * @var string[]
      */
-    private $registered = [];
+    private array $registered = [];
 
     /**
      * ProviderContainer constructor.
@@ -32,6 +32,7 @@ class ProviderContainer extends Container
      */
     public function __construct(ContainerInterface $container, ServiceProviderInterface $serviceProvider)
     {
+        parent::__construct();
         $this->container = $container;
         $this->serviceProvider = $serviceProvider;
     }
@@ -39,7 +40,7 @@ class ProviderContainer extends Container
     /**
      * @inheritdoc
      */
-    public function injectContainer($entry)
+    public function injectContainer($entry): mixed
     {
         return $this->container->injectContainer($entry);
     }
@@ -55,7 +56,7 @@ class ProviderContainer extends Container
     /**
      * @inheritDoc
      */
-    public function has($id)
+    public function has($id): bool
     {
         return $this->container->has($id);
     }
@@ -117,7 +118,7 @@ class ProviderContainer extends Container
     /**
      * Check all the items that were promised were actually registered
      */
-    public function done()
+    public function done(): void
     {
         if (array_diff($this->registered, $this->serviceProvider->provides())) {
             throw new ServiceProviderException(
@@ -141,11 +142,11 @@ class ProviderContainer extends Container
     /**
      * Pass all calls to the original container
      *
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param mixed[] $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         return call_user_func_array([$this->container, $name], $arguments);
     }

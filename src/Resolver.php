@@ -16,7 +16,7 @@ class Resolver implements ResolverInterface
     /**
      * @inheritDoc
      */
-    public function resolve(string $id, ContainerInterface $container)
+    public function resolve(string $id, ContainerInterface $container): mixed
     {
         try {
             // check if this is a class
@@ -50,7 +50,7 @@ class Resolver implements ResolverInterface
      * @param string $id
      * @param ReflectionParameter[] $parameters
      * @param ContainerInterface $container
-     * @return array
+     * @return mixed[]
      */
     private function resolveParameters(string $id, array $parameters, ContainerInterface $container): array
     {
@@ -69,9 +69,9 @@ class Resolver implements ResolverInterface
      * @param ContainerInterface $container
      * @return mixed
      */
-    private function getParameterValue(string $id, ReflectionParameter $parameter, ContainerInterface $container)
+    private function getParameterValue(string $id, ReflectionParameter $parameter, ContainerInterface $container): mixed
     {
-        if (! ($class = $parameter->getClass())) {
+        if (! ($class = $parameter->getType())) {
             if ($parameter->isDefaultValueAvailable()) {
                 // a default value is available so use that
                 return $parameter->getDefaultValue();
@@ -83,7 +83,7 @@ class Resolver implements ResolverInterface
 
         try {
             // attempt to resolve the value
-            return $container->get($class->getName());
+            return $container->get((string)$class);
         } catch (NotFoundException $e) {
             if ($parameter->isDefaultValueAvailable()) {
                 // a default value is available so use that

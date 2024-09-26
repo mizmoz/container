@@ -15,14 +15,14 @@ class Container implements ContainerInterface
     /**
      * Registry for the items
      *
-     * @var array
+     * @var Provider[]|Entry[]
      */
-    private $registry = [];
+    private array $registry = [];
 
     /**
-     * @var ResolverInterface
+     * @var ResolverInterface|null
      */
-    private $resolver;
+    private ?ResolverInterface $resolver;
 
     /**
      * Container constructor.
@@ -36,10 +36,10 @@ class Container implements ContainerInterface
     /**
      * Find the item in the registry
      *
-     * @param $id
-     * @return mixed
+     * @param string $id
+     * @return Entry|Provider
      */
-    private function find($id)
+    private function find(string $id): Entry|Provider
     {
         if (! isset($this->registry[$id])) {
             throw new NotFoundException("Entry id '" . $id . "' not found in container");
@@ -51,7 +51,7 @@ class Container implements ContainerInterface
     /**
      * @inheritdoc
      */
-    public function injectContainer($entry)
+    public function injectContainer(mixed $entry): mixed
     {
         return InjectContainer::inject($this, $entry);
     }
@@ -59,7 +59,7 @@ class Container implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function get($id)
+    public function get(string $id)
     {
         try {
             return $this->injectContainer($this->find($id)($id, $this));
@@ -71,6 +71,7 @@ class Container implements ContainerInterface
 
             // resolve and add to the container
             $this->add($id, function () use ($id) {
+                /** @phpstan-ignore method.nonObject */
                 return $this->resolver->resolve($id, $this);
             });
 
@@ -82,7 +83,7 @@ class Container implements ContainerInterface
     /**
      * @inheritDoc
      */
-    public function has($id)
+    public function has(string $id): bool
     {
         return isset($this->registry[$id]);
     }
@@ -94,17 +95,15 @@ class Container implements ContainerInterface
     {
         if (is_string($entry)) {
             $entry = function () use ($entry) {
-                return ($this->resolver ? $this->resolver->resolve($entry, $this) : new $entry);
+                return $this->resolver ? $this->resolver->resolve($entry, $this) : new $entry;
             };
         }
 
-        if (! ($entry instanceof Closure || is_callable($entry))) {
+        if (! is_callable($entry)) {
             throw new InvalidEntryException('$entry must be callable or MyClass::class string');
         }
 
-        return $this->registry[$id] = new Entry(
-            $id, $entry, $type
-        );
+        return $this->registry[$id] = new Entry($entry, $type);
     }
 
     /**
@@ -159,5 +158,13 @@ class Container implements ContainerInterface
         }
 
         return $provider;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function provides(): array
+    {
+        return array_keys($this->registry);
     }
 }

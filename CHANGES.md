@@ -1,3 +1,9 @@
+v2.0.0
+
+- Update has() method to match PSR-11 v2 interface
+- Update to PHP 8.3
+- Add PHPStan static analysis
+- Add provides() to ContainerInterface to return all services provided by the container
 
 v1.3.0
 

@@ -4,6 +4,7 @@ namespace Mizmoz\Container\Tests;
 
 use Mizmoz\Container\Container;
 use Mizmoz\Container\Contract\ContainerInterface;
+use Mizmoz\Container\Contract\ManageContainerInterface;
 use Mizmoz\Container\InjectContainer;
 use Mizmoz\Container\ManageContainerTrait;
 
@@ -14,9 +15,9 @@ class InjectContainerTest extends TestCase
         return new Container();
     }
 
-    public function testSimpleInjection()
+    public function testSimpleInjection(): void
     {
-        $simple = new class ()
+        $simple = new class () implements ManageContainerInterface
         {
             use ManageContainerTrait;
         };
@@ -28,18 +29,18 @@ class InjectContainerTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $simple->getAppContainer());
     }
 
-    public function testInjectionAfterSetAppContainerIsCalled()
+    public function testInjectionAfterSetAppContainerIsCalled(): void
     {
-        $simple = new class ()
+        $simple = new class () implements ManageContainerInterface
         {
             use ManageContainerTrait;
 
-            public $called = false;
+            public bool $called = false;
 
             /**
              * @inheritDoc
              */
-            public function afterSetAppContainer()
+            public function afterSetAppContainer(): void
             {
                 $this->called = true;
             }
@@ -55,9 +56,9 @@ class InjectContainerTest extends TestCase
     /**
      * Check that we can resolve the container when it's included in some other part of the class (child trait etc).
      */
-    public function testResolveInScope()
+    public function testResolveInScope(): void
     {
-        $simple = new class ()
+        $simple = new class () implements ManageContainerInterface
         {
             use ManageTestTrait;
         };
@@ -72,7 +73,7 @@ class InjectContainerTest extends TestCase
     /**
      * Check that we can resolve the container when it's included in some other part of the class (child trait etc).
      */
-    public function testResolveInExtended()
+    public function testResolveInExtended(): void
     {
         $simple = new class () extends InjectBaseAbstract
         {

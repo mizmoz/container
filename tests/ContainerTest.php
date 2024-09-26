@@ -5,6 +5,7 @@ namespace Mizmoz\Container\Tests;
 use DateTime;
 use Mizmoz\Container\Container;
 use Mizmoz\Container\Contract\ContainerInterface;
+use Mizmoz\Container\Exception\InvalidEntryException;
 use Mizmoz\Container\Exception\NotFoundException;
 use Mizmoz\Container\Exception\ServiceProviderException;
 use Mizmoz\Container\ServiceProviderAbstract;
@@ -17,28 +18,37 @@ class ContainerTest extends TestCase
      * @param $returnValue
      * @return \Closure
      */
-    private function getCallable($returnValue)
+    private function getCallable($returnValue): \Closure
     {
         return function () use ($returnValue) {
             return $returnValue;
         };
     }
 
-    public function testContainerAddAndGet()
+    public function testContainerAddAndGet(): void
     {
         $container = new Container();
-        $container->add('test', $this->getCallable('hello'));
-        $this->assertEquals('hello', $container->get('test'));
+        $container->add('test', $this->getCallable('beep'));
+        $this->assertEquals('beep', $container->get('test'));
     }
 
-    public function testContainerClassNameResolution()
+    public function testContainerClassNameResolution(): void
     {
         $container = new Container();
         $container->add('logger', ResolveLogger::class);
         $this->assertInstanceOf(ResolveLogger::class, $container->get('logger'));
     }
 
-    public function testContainerGetNotFound()
+    public function testContainerAddNonCallable(): void
+    {
+        // should throw an exception when we try to add a non-callable item
+        $this->expectException(InvalidEntryException::class);
+
+        // get none set item
+        (new Container())->add('test', 1);
+    }
+
+    public function testContainerGetNotFound(): void
     {
         // should throw an exception when we try to get an invalid item
         $this->expectException(NotFoundException::class);
@@ -47,7 +57,7 @@ class ContainerTest extends TestCase
         (new Container())->get('test');
     }
 
-    public function testContainerHas()
+    public function testContainerHas(): void
     {
         // get none set item
         $container = new Container();
@@ -61,7 +71,7 @@ class ContainerTest extends TestCase
         $this->assertFalse($container->has('d'));
     }
 
-    public function testGetShared()
+    public function testGetShared(): void
     {
         $container = new Container();
         $container->addShared('date', function () {
@@ -72,7 +82,7 @@ class ContainerTest extends TestCase
     }
 
 
-    public function testAddServiceProvider()
+    public function testAddServiceProvider(): void
     {
         $container = new Container();
         $container->addServiceProvider(new class extends ServiceProviderAbstract {
@@ -89,7 +99,7 @@ class ContainerTest extends TestCase
             /**
              * @inheritDoc
              */
-            public function register(ContainerInterface $container)
+            public function register(ContainerInterface $container): void
             {
                 $container->add('test', function () {
                     return 'cheese';
@@ -103,7 +113,7 @@ class ContainerTest extends TestCase
     /**
  * Adding a service provider that doesn't end up providing what it said it would should fail gracefully
  */
-    public function testAddBrokenServiceProvider()
+    public function testAddBrokenServiceProvider(): void
     {
         $container = new Container();
         $container->addServiceProvider(new class extends ServiceProviderAbstract {
@@ -120,7 +130,7 @@ class ContainerTest extends TestCase
             /**
              * @inheritDoc
              */
-            public function register(ContainerInterface $container)
+            public function register(ContainerInterface $container): void
             {
                 $container->add('tests', function () {
                     return 'cheese';
@@ -138,7 +148,7 @@ class ContainerTest extends TestCase
      * Adding a service provider that doesn't end up providing what it said it would should fail gracefully
      * Same test as above but with the broken bits in the other way around
      */
-    public function testAddBrokenServiceProviderPartDeux()
+    public function testAddBrokenServiceProviderPartDeux(): void
     {
         $container = new Container();
         $container->addServiceProvider(new class extends ServiceProviderAbstract {
@@ -155,7 +165,7 @@ class ContainerTest extends TestCase
             /**
              * @inheritDoc
              */
-            public function register(ContainerInterface $container)
+            public function register(ContainerInterface $container): void
             {
                 $container->add('test', function () {
                     return 'cheese';
@@ -169,7 +179,7 @@ class ContainerTest extends TestCase
         $this->assertEquals('cheese', $container->get('test'));
     }
 
-    public function testAddAlias()
+    public function testAddAlias(): void
     {
         // get none set item
         $container = new Container();
@@ -178,14 +188,14 @@ class ContainerTest extends TestCase
         $this->assertEquals('hello', $container->get('sayIt'));
     }
     
-    public function testAddValue()
+    public function testAddValue(): void
     {
         $container = new Container();
         $container->addValue('name', 'bob');
         $this->assertEquals('bob', $container->get('name'));
     }
 
-    public function testManageContainerTrait()
+    public function testManageContainerTrait(): void
     {
         // container should be passed to any object being instantiated in the container
         $container = new Container();

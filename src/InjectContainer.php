@@ -11,42 +11,36 @@ class InjectContainer
      * Inject the container if it uses the ManageContainerTrait
      *
      * @param ContainerInterface $container
-     * @param $entry
+     * @param mixed $entry
      * @return mixed
      */
-    public static function inject(ContainerInterface $container, $entry)
+    public static function inject(ContainerInterface $container, mixed $entry): mixed
     {
-        if (! is_object($entry)) {
-            return $entry;
+        if ($entry instanceof ManageContainerInterface) {
+            return $entry->setAppContainer($container);
         }
 
-        if (! static::classUses($entry, ManageContainerTrait::class)
-            && ! $entry instanceof ManageContainerInterface) {
-            return $entry;
-        }
-
-        // set the container
-        return $entry->setAppContainer($container);
+        return $entry;
     }
 
     /**
      * Check to see if the class uses the provided item
      *
-     * @param $class
+     * @param object|string $class
      * @param string $find
      * @return bool
      */
-    public static function classUses($class, string $find): bool
+    public static function classUses(object|string $class, string $find): bool
     {
         $uses = class_uses($class);
 
-        if (in_array($find, $uses)) {
+        if ($uses && in_array($find, $uses)) {
             // found the item
             return true;
         }
 
         // add any parent classes to the search
-        $uses = array_merge($uses, class_parents($class));
+        $uses = array_merge($uses, class_parents($class) ?? []);
 
         foreach ($uses as $use) {
             if (static::classUses($use, $find)) {

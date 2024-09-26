@@ -10,7 +10,7 @@ class Provider
     /**
      * @var ServiceProviderInterface
      */
-    private $serviceProvider;
+    private ServiceProviderInterface $serviceProvider;
 
     /**
      * Provider constructor.
@@ -29,7 +29,7 @@ class Provider
      * @param ContainerInterface $container
      * @return mixed
      */
-    public function __invoke(string $id, ContainerInterface $container)
+    public function __invoke(string $id, ContainerInterface $container): mixed
     {
         $providerContainer = new ProviderContainer($container, $this->serviceProvider);
 

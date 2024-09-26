@@ -4,7 +4,7 @@ namespace Mizmoz\Container\Tests;
 
 class ResolveBaseDefaultArgs
 {
-    public $name;
+    public string $name;
 
     public function __construct(string $name = 'Bob')
     {

@@ -8,14 +8,14 @@ use Mizmoz\Container\Exception\ContainerNotSetException;
 trait ManageContainerTrait
 {
     /**
-     * @var ContainerInterface
+     * @var ContainerInterface|null
      */
-    private $appContainer;
+    private ?ContainerInterface $appContainer = null;
 
     /**
      * Called after setting the app container
      */
-    public function afterSetAppContainer() {}
+    public function afterSetAppContainer(): void {}
 
     /**
      * Get the container
@@ -37,7 +37,7 @@ trait ManageContainerTrait
      * @param ContainerInterface $container
      * @return $this
      */
-    public function setAppContainer(ContainerInterface $container)
+    public function setAppContainer(ContainerInterface $container): static
     {
         $this->appContainer = $container;
         $this->afterSetAppContainer();

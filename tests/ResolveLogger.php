@@ -12,7 +12,7 @@ class ResolveLogger implements ResolveLoggerInterface
     /**
      * @inheritdoc
      */
-    public function log(string $message)
+    public function log(string $message): void
     {
         // write the log to something!
     }

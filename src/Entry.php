@@ -3,14 +3,10 @@
 namespace Mizmoz\Container;
 
 use Mizmoz\Container\Contract\ContainerInterface;
+use Mizmoz\Container\Contract\ManageContainerInterface;
 
 class Entry
 {
-    /**
-     * @var string
-     */
-    private $id;
-
     /**
      * @var callable
      */
@@ -19,23 +15,21 @@ class Entry
     /**
      * @var string
      */
-    private $type;
+    private string $type;
 
     /**
      * @var mixed
      */
-    private $cached;
+    private mixed $cached = null;
 
     /**
      * Entry constructor.
      *
-     * @param string $id
      * @param callable $entry
      * @param string $type
      */
-    public function __construct(string $id, callable $entry, string $type = Container::EXCLUSIVE)
+    public function __construct(callable $entry, string $type = ContainerInterface::EXCLUSIVE)
     {
-        $this->id = $id;
         $this->entry = $entry;
         $this->type = $type;
     }
@@ -43,22 +37,17 @@ class Entry
     /**
      * Inject the container if it uses the ManageContainerTrait
      *
-     * @param $entry
+     * @param mixed $entry
      * @param ContainerInterface $container
      * @return mixed
      */
-    private function injectContainer($entry, ContainerInterface $container)
+    private function injectContainer(mixed $entry, ContainerInterface $container): mixed
     {
-        if (! is_object($entry)) {
-            return $entry;
+        if ($entry instanceof ManageContainerInterface) {
+            return $entry->setAppContainer($container);
         }
 
-        if (! in_array(ManageContainerTrait::class, class_uses($entry))) {
-            return $entry;
-        }
-
-        // set the container
-        return $entry->setAppContainer($container);
+        return $entry;
     }
 
     /**
@@ -68,11 +57,11 @@ class Entry
      * @param ContainerInterface $container
      * @return mixed
      */
-    public function __invoke(string $id, ContainerInterface $container)
+    public function __invoke(string $id, ContainerInterface $container): mixed
     {
         $call = $this->entry;
 
-        if ($this->type === Container::SHARED) {
+        if ($this->type === ContainerInterface::SHARED) {
             if ($this->cached) {
                 return $this->cached;
             }

@@ -14,5 +14,5 @@ interface ResolverInterface
      * @throws NotFoundException
      * @return mixed
      */
-    public function resolve(string $id, ContainerInterface $container);
+    public function resolve(string $id, ContainerInterface $container): mixed;
 }
