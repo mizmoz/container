@@ -29,6 +29,20 @@ class InjectContainerTest extends TestCase
         $this->assertInstanceOf(ContainerInterface::class, $simple->getAppContainer());
     }
 
+    public function testTraitOnlyInjection(): void
+    {
+        $simple = new class ()
+        {
+            use ManageContainerTrait;
+        };
+
+        // inject the container
+        $simple = InjectContainer::inject($this->getContainer(), $simple);
+
+        // check we have the container now
+        $this->assertInstanceOf(ContainerInterface::class, $simple->getAppContainer());
+    }
+
     public function testInjectionAfterSetAppContainerIsCalled(): void
     {
         $simple = new class () implements ManageContainerInterface

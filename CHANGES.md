@@ -1,3 +1,7 @@
+v2.0.1
+
+- Fix bug with injecting the container in to classes that use the ManageContainerTrait
+
 v2.0.0
 
 - Update has() method to match PSR-11 v2 interface

@@ -16,7 +16,8 @@ class InjectContainer
      */
     public static function inject(ContainerInterface $container, mixed $entry): mixed
     {
-        if ($entry instanceof ManageContainerInterface) {
+        if ($entry instanceof ManageContainerInterface
+            || static::classUses($entry, ManageContainerTrait::class)) {
             return $entry->setAppContainer($container);
         }
 
@@ -32,7 +33,7 @@ class InjectContainer
      */
     public static function classUses(object|string $class, string $find): bool
     {
-        $uses = class_uses($class);
+        $uses = class_uses($class) ?: [];
 
         if ($uses && in_array($find, $uses)) {
             // found the item
@@ -40,7 +41,7 @@ class InjectContainer
         }
 
         // add any parent classes to the search
-        $uses = array_merge($uses, class_parents($class) ?? []);
+        $uses = array_merge($uses, class_parents($class) ?: []);
 
         foreach ($uses as $use) {
             if (static::classUses($use, $find)) {
